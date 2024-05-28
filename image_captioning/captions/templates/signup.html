@@ -1,11 +1,9 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'global.css' %}">
-    <title>Sign Up</title>
-</head>
-<body>
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
     <h2>Sign Up</h2>
     <form method="post">
         {% csrf_token %}
@@ -15,5 +13,4 @@
     <p>
         Already have an account? <a href="{% url 'login' %}">Login</a>
     </p>
-</body>
-</html>
+{% endblock %}

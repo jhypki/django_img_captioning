@@ -1,23 +1,26 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'global.css' %}">
-    <title>Upload Image</title>
-</head>
-<body>
-    <h2>Upload Image</h2>
-    <form id="upload-form" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <!-- Manually render the image input field without the default label -->
-        {{ form.image }}
-        <label for="file" id="file-label">Choose a file</label>
-        <button  type="submit">Upload</button>
-    </form>
-    {% if caption %}
-        <p class="caption">Caption: <span>{{ caption }}</span></p>
-    {% endif %}
+{% block title %}Upload Image{% endblock %}
+
+{% block content %}
+<h2>Upload Image</h2>
+<form id="upload-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="file" name="image" id="file" class="inputfile" />
+    <label for="file" id="file-label">Choose a file</label>
+    <button type="submit">GENERATE</button>
+</form>
+{% if captions %}
+    <p class="caption">Captions:
+        <ul class="captions">
+            {% for caption in captions %}
+                <li>{{ caption }}</li>
+            {% endfor %}
+        </ul>
+    </p>
+{% endif %}
 
     <script>
         document.getElementById('file').addEventListener('change', function(event) {
@@ -33,9 +36,8 @@
 
         document.getElementById('upload-form').addEventListener('submit', function(event) {
             var button = document.querySelector('button');
-            button.textContent = 'Uploading...';
+            button.textContent = 'Generating captions...';
             button.disabled = true;
         });
     </script>
-</body>
-</html>
+{% endblock %}

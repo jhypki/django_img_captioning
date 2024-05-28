@@ -1,13 +1,11 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'global.css' %}">
-    <title>Login</title>
-</head>
-<body>
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
     <h2>Login</h2>
-    <form method="post">
+    <form method="post" class="login-form">
         {% csrf_token %}
         <input type="text" name="username" placeholder="Username">
         <input type="password" name="password" placeholder="Password">
@@ -19,5 +17,4 @@
     <p>
         Don't have an account? <a href="{% url 'signup' %}">Sign up</a>
     </p>
-</body>
-</html>
+{% endblock %}

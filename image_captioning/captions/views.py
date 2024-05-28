@@ -47,16 +47,22 @@ def logout_view(request):
 def upload_image(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    
+
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             image = form.cleaned_data['image']
             caption = generate_caption(image)
-            return render(request, 'upload.html', {'form': form, 'caption': caption})
+            
+            # Save the caption in the session to display after redirect
+            request.session['caption'] = caption
+            return redirect('upload_image')
     else:
         form = ImageUploadForm()
-    return render(request, 'upload.html', {'form': form})
+
+    # Retrieve the caption from the session if available
+    caption = request.session.pop('caption', None)
+    return render(request, 'upload.html', {'form': form, 'captions': caption})
 
 def generate_caption(image):
     endpoint = "https://us-central1-aiplatform.googleapis.com/v1/projects/image-captioning-424715/locations/us-central1/publishers/google/models/imagetext:predict"
@@ -74,7 +80,7 @@ def generate_caption(image):
             }
         ],
         "parameters": {
-            "sampleCount": 1,
+            "sampleCount": 3,
             "language": "en",
         }
     }
@@ -94,7 +100,7 @@ def generate_caption(image):
     
     if response.status_code != 200:
         return "Error generating caption"
-    return response.json()['predictions'][0].capitalize()
+    return response.json()['predictions']
 
 def get_google_access_token():
     # Load the service account credentials and get an access token

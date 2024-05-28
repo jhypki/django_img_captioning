@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Image Captioning{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'global.css' %}">
+</head>
+<body>
+    <header>
+        <h1 class="logo">Image <span>Captioning</span></h1>
+        <nav>
+            <ul>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'upload_image' %}">Upload Image</a></li>
+                    <li ><a class="logout" href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'signup' %}">Sign Up</a></li>
+                {% endif %}
+                <!-- Add more navigation links here -->
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Image Captioning</p>
+    </footer>
+</body>
+</html>
