@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'global.css' %}">
+    <title>Upload Image</title>
+</head>
+<body>
+    <h2>Upload Image</h2>
+    <form id="upload-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Manually render the image input field without the default label -->
+        {{ form.image }}
+        <label for="file" id="file-label">Choose a file</label>
+        <button  type="submit">Upload</button>
+    </form>
+    {% if caption %}
+        <p class="caption">Caption: <span>{{ caption }}</span></p>
+    {% endif %}
+
+    <script>
+        document.getElementById('file').addEventListener('change', function(event) {
+            var input = event.target;
+            var label = document.getElementById('file-label');
+            if (input.files && input.files.length > 0) {
+                var fileName = input.files[0].name;
+                label.textContent = fileName;
+            } else {
+                label.textContent = 'Choose a file';
+            }
+        });
+
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            var button = document.querySelector('button');
+            button.textContent = 'Uploading...';
+            button.disabled = true;
+        });
+    </script>
+</body>
+</html>
