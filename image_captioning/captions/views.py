@@ -2,11 +2,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from .forms import ImageUploadForm
+from .models import UploadedImage, Caption
 import requests
 import base64
 import json
 from google.oauth2 import service_account
 from google.auth.transport.requests import Request
+from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
 
 def signup(request):
     if request.method == 'POST':
@@ -53,8 +56,12 @@ def upload_image(request):
         if form.is_valid():
             image = form.cleaned_data['image']
             caption = generate_caption(image)
-            
+            fs = FileSystemStorage()
+            filename = fs.save(image.name, image)
+            uploaded_image = UploadedImage.objects.create(user=request.user, image=filename)
             # Save the caption in the session to display after redirect
+            for caption_text in caption:
+                    Caption.objects.create(image=uploaded_image, text=caption_text)
             request.session['caption'] = caption
             return redirect('upload_image')
     else:
@@ -105,8 +112,13 @@ def generate_caption(image):
 def get_google_access_token():
     # Load the service account credentials and get an access token
     credentials = service_account.Credentials.from_service_account_file(
-        r'C:\Users\kubah\Desktop\django_img_captioning\image-captioning-424715-abc35ed4ae6b.json',
+        r'C:\Users\Kuba\Desktop\django_img_captioning\image-captioning-424715-abc35ed4ae6b.json',
         scopes=['https://www.googleapis.com/auth/cloud-platform']
     )
     credentials.refresh(Request())
     return credentials.token
+
+@login_required
+def profile(request):
+    uploaded_images = UploadedImage.objects.filter(user=request.user).order_by('-uploaded_at')
+    return render(request, 'profile.html', {'uploaded_images': uploaded_images})

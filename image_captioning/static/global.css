@@ -2,6 +2,7 @@
 :root{
     --primary-color: #07002e;
     --secondary-color: #5eff64; 
+    --border-radius: 5px;
 }
 *{
     margin: 0;
@@ -10,6 +11,19 @@
     color: #928fa4;
 
 }
+ul{
+    list-style: none;
+
+}
+
+input{
+    border-radius: var(--border-radius);
+}
+
+nav ul li{
+    display: flex;
+    align-items: center;
+}
 body{
     background: var(--primary-color);
     display: flex;
@@ -17,8 +31,8 @@ body{
     gap: 1rem;
     align-items: center;
     font-family: 'Roboto', sans-serif;
-    min-height: 100vh;
-
+    min-height: 100dvh;
+    
 }
 
 main{
@@ -52,7 +66,8 @@ header{
     width: 100%;
     position: sticky;
     top: 0;
-
+    background: var(--primary-color);
+    
 }
 
 header > nav > ul{
@@ -85,8 +100,8 @@ form{
 
 form input{
     padding: 1rem;
-    background: #524e6e;
-    border: none;
+    background: var(--primary-color);
+    border: 1px solid #484464;
     font-size: 1rem;
     font-weight: 500;
     letter-spacing: 1px;
@@ -105,6 +120,7 @@ form button{
     letter-spacing: 1px;
     border: 1px solid var(--secondary-color);
     transition: background 0.3s;
+    border-radius: var(--border-radius);
 }
 
 form button:hover{
@@ -115,6 +131,12 @@ form button:hover{
 
 .logout{
     color: #ff4b5c;
+    transition:all 0.3s;
+}
+
+.logout:hover{
+    color: red;
+
 }
 
 form p{
@@ -143,6 +165,7 @@ form p{
     border: 1px solid #484464;
     transition: all 0.3s;
     overflow: hidden;
+    border-radius: var(--border-radius);
 }
 
 .inputfile:focus + label,
@@ -180,7 +203,7 @@ form p{
     gap: 1rem;
     padding: 1rem;
     background: #19183d;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     text-transform: capitalize;
     color: #d9d9d9;
     font-size: 1rem;
@@ -190,4 +213,31 @@ a{
     color: #6d6984;
     text-decoration: none;
     font-weight: 700;
+    transition: all 0.3s;
+}
+
+a:hover{
+    color: var(--secondary-color);
+}
+
+.uploaded-img{
+    width: 100%;
+    max-width: 350px;
+    border-radius: var(--border-radius);
+    object-fit: cover;
+    border: 1px solid #484464;
+}
+
+.image-with-captions{
+    display: flex;
+    width: 100%;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+}
+
+.image-with-captions:last-child{
+    margin-bottom: 2rem;
 }

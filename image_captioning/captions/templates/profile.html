@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h2>My Uploaded Images</h2>
+{% for image in uploaded_images %}
+    <div class="image-with-captions">
+        <img class='uploaded-img' src="{{ image.image.url }}" alt="Uploaded Image">
+        <ul class="captions">
+            {% for caption in image.captions.all %}
+                <li>{{ caption.text }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endfor %}
+{% endblock %}
