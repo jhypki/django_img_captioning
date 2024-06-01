@@ -118,7 +118,8 @@ def get_google_access_token():
     credentials.refresh(Request())
     return credentials.token
 
-@login_required
 def profile(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     uploaded_images = UploadedImage.objects.filter(user=request.user).order_by('-uploaded_at')
     return render(request, 'profile.html', {'uploaded_images': uploaded_images})
