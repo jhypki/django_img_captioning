@@ -10,6 +10,10 @@ from google.oauth2 import service_account
 from google.auth.transport.requests import Request
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 def signup(request):
     if request.method == 'POST':
@@ -111,8 +115,10 @@ def generate_caption(image):
 
 def get_google_access_token():
     # Load the service account credentials and get an access token
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, 'image-captioning-424715-abc35ed4ae6b.json')
     credentials = service_account.Credentials.from_service_account_file(
-        r'C:\Users\Kuba\Desktop\django_img_captioning\image-captioning-424715-abc35ed4ae6b.json',
+        filename,
         scopes=['https://www.googleapis.com/auth/cloud-platform']
     )
     credentials.refresh(Request())
