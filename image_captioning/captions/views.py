@@ -56,13 +56,16 @@ def upload_image(request):
         return redirect('login')
 
     if request.method == 'POST':
+        # Create a form instance and populate it with data from the request
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
+
             image = form.cleaned_data['image']
             caption = generate_caption(image)
             fs = FileSystemStorage()
             filename = fs.save(image.name, image)
             uploaded_image = UploadedImage.objects.create(user=request.user, image=filename)
+
             # Save the caption in the session to display after redirect
             for caption_text in caption:
                     Caption.objects.create(image=uploaded_image, text=caption_text)
@@ -76,8 +79,11 @@ def upload_image(request):
     return render(request, 'upload.html', {'form': form, 'captions': caption})
 
 def generate_caption(image):
+
+    # Endpoint for the image captioning model
     endpoint = "https://us-central1-aiplatform.googleapis.com/v1/projects/image-captioning-424715/locations/us-central1/publishers/google/models/imagetext:predict"
 
+    # Read the image file and encode it in base64
     content = image.read()
     encoded_content = base64.b64encode(content).decode('utf-8')
 
@@ -91,7 +97,7 @@ def generate_caption(image):
             }
         ],
         "parameters": {
-            "sampleCount": 3,
+            "sampleCount": 3, 
             "language": "en",
         }
     }
@@ -109,8 +115,11 @@ def generate_caption(image):
     response = requests.post(endpoint, json=payload, headers=headers)
     json.dumps(response.json(), indent=2)
     
+    # Return the error message if the response is not successful
     if response.status_code != 200:
         return "Error generating caption"
+    
+    # Return the captions
     return response.json()['predictions']
 
 def get_google_access_token():
@@ -127,5 +136,7 @@ def get_google_access_token():
 def profile(request):
     if not request.user.is_authenticated:
         return redirect('login')
+    
+    # Retrieve the uploaded images for the current user
     uploaded_images = UploadedImage.objects.filter(user=request.user).order_by('-uploaded_at')
     return render(request, 'profile.html', {'uploaded_images': uploaded_images})
